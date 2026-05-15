@@ -25,12 +25,21 @@ CLASS_NAMES = ['Empty', 'Occupied']
 app = Flask(__name__)
 
 # Allow all websites to call this API for demo
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
+
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = make_response("", 204)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        return response
 
 @app.after_request
 def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Headers"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     return response
 
@@ -68,17 +77,15 @@ def health():
     return jsonify({'status': 'ok'})
 
 
-@app.route('/predict', methods=['OPTIONS'])
-def predict_options():
-    response = make_response('', 204)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-    return response
-
-
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
+    if request.method == "OPTIONS":
+        response = make_response("", 204)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        return response
+
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded. Send as form-data field "image".'}), 400
 

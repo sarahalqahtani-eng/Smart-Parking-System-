@@ -1,21 +1,24 @@
 """
-Smart Parking — AI Backend (Flask)
-====================================
-Loads the trained Keras model and serves a /predict endpoint.
+Smart Parking — AI Backend + Website Server (Flask)
+===================================================
+Serves the website pages and the /predict AI endpoint from the same Render link.
 """
 
 import io
 import os
 import numpy as np
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, send_from_directory
 from flask_cors import CORS
 from PIL import Image
 import tensorflow as tf
 
 # -------------------------------------------------------------------------
-# Config
+# Paths / Config
 # -------------------------------------------------------------------------
-MODEL_PATH = os.path.join(os.path.dirname(__file__), 'parking_ai_model.keras')
+BACKEND_DIR = os.path.dirname(__file__)
+PROJECT_ROOT = os.path.dirname(BACKEND_DIR)
+
+MODEL_PATH = os.path.join(BACKEND_DIR, 'parking_ai_model.keras')
 IMG_SIZE = (224, 224)
 CLASS_NAMES = ['Empty', 'Occupied']
 
@@ -23,8 +26,6 @@ CLASS_NAMES = ['Empty', 'Occupied']
 # App init
 # -------------------------------------------------------------------------
 app = Flask(__name__)
-
-# Allow all websites to call this API for demo
 CORS(app)
 
 @app.before_request
@@ -60,10 +61,48 @@ def preprocess(image_bytes: bytes) -> np.ndarray:
 
 
 # -------------------------------------------------------------------------
-# Routes
+# Website Routes
 # -------------------------------------------------------------------------
 @app.route('/', methods=['GET'])
-def index():
+def home_page():
+    return send_from_directory(PROJECT_ROOT, 'index.html')
+
+
+@app.route('/index.html', methods=['GET'])
+def index_html():
+    return send_from_directory(PROJECT_ROOT, 'index.html')
+
+
+@app.route('/reservation.html', methods=['GET'])
+def reservation_page():
+    return send_from_directory(PROJECT_ROOT, 'reservation.html')
+
+
+@app.route('/ai-analyzer.html', methods=['GET'])
+def ai_analyzer_page():
+    return send_from_directory(PROJECT_ROOT, 'ai-analyzer.html')
+
+
+@app.route('/css/<path:filename>', methods=['GET'])
+def css_files(filename):
+    return send_from_directory(os.path.join(PROJECT_ROOT, 'css'), filename)
+
+
+@app.route('/js/<path:filename>', methods=['GET'])
+def js_files(filename):
+    return send_from_directory(os.path.join(PROJECT_ROOT, 'js'), filename)
+
+
+@app.route('/assets/<path:filename>', methods=['GET'])
+def asset_files(filename):
+    return send_from_directory(os.path.join(PROJECT_ROOT, 'assets'), filename)
+
+
+# -------------------------------------------------------------------------
+# API Routes
+# -------------------------------------------------------------------------
+@app.route('/api', methods=['GET'])
+def api_info():
     return jsonify({
         'name': 'Smart Parking AI Backend',
         'model': MODEL_PATH,
@@ -80,11 +119,7 @@ def health():
 @app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
     if request.method == "OPTIONS":
-        response = make_response("", 204)
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Headers"] = "*"
-        response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-        return response
+        return make_response("", 204)
 
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded. Send as form-data field "image".'}), 400

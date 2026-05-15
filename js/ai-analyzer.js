@@ -37,10 +37,10 @@ async function analyzeImage(file) {
   formData.append('image', file);
 
   try {
-    const resp = await fetch(`${CONFIG.AI_BACKEND_URL.replace(/\/$/, '')}/predict`, {
-      method: 'POST',
-      body: formData,
-    });
+    const resp = await fetch('https://smart-parking-system-309k.onrender.com/predict', {
+  method: 'POST',
+  body: formData,
+});
     if (!resp.ok) throw new Error(`Backend returned ${resp.status}`);
     const result = await resp.json();
     // Expected response: { result: 'Empty' | 'Occupied', confidence: 0.0-1.0 }

@@ -8,7 +8,6 @@ __pycache__/
 node_modules/
 dist/
 *.h5
-*.keras
 *.pt
 *.pth
 *.onnx

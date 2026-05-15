@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Parking · Al Yamamah University</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Hero banner -->
+  <section class="hero-banner">
+    <img src="assets/parking-banner.jpg" alt="Parking" loading="lazy">
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="hero-content">
+      <div class="hero-tagline" data-i18n="hero_tagline">Smart Parking System</div>
+      <h1 class="hero-title" data-i18n="hero_title">Find Your Spot. Instantly.</h1>
+      <p class="hero-subtitle" data-i18n="hero_subtitle">IoT-powered parking with real-time availability across campus.</p>
+    </div>
+  </section>
+
+  <!-- Map section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label" data-i18n="map_label">Live Campus Map</span>
+        <h2 class="section-title" data-i18n="map_title">Campus Parking Map</h2>
+        <p class="section-subtitle" data-i18n="map_subtitle">Tap the map below to see which spots are available right now.</p>
+      </div>
+
+      <div class="map-container">
+        <div class="map-canvas" id="map-canvas"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live parking spots -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label" data-i18n="spots_label">Live Sensor Data</span>
+        <h2 class="section-title" data-i18n="spots_title">Available Parking</h2>
+        <p class="section-subtitle" data-i18n="spots_subtitle">Real-time updates from our ultrasonic sensor network.</p>
+        <div class="live-indicator offline" id="live-indicator">
+          <span data-i18n="live_offline">Sensor Offline</span>
+          <span class="dot"></span>
+        </div>
+      </div>
+
+      <div class="spots-grid" id="spots-grid"></div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/translations.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Analyzer · Smart Parking</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Hero banner -->
+  <section class="hero-banner">
+    <img src="assets/parking-banner.jpg" alt="Parking" loading="lazy">
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="hero-content">
+      <div class="hero-tagline" data-i18n="ai_label">AI Powered</div>
+      <h1 class="hero-title" data-i18n="ai_title">AI Spot Analyzer</h1>
+      <p class="hero-subtitle" data-i18n="ai_subtitle">Upload a parking spot image and let our model classify it.</p>
+    </div>
+  </section>
+
+  <!-- Upload + result -->
+  <section class="section">
+    <div class="container" style="max-width:900px;">
+
+      <label class="ai-upload" id="ai-upload">
+        <div class="ai-upload-icon">📤</div>
+        <div class="ai-upload-text" data-i18n="ai_upload_text">Click or drop an image here</div>
+        <div class="ai-upload-hint" data-i18n="ai_upload_hint">PNG or JPG · Maximum 5MB</div>
+        <input type="file" id="ai-file-input" accept="image/*">
+      </label>
+
+      <div class="ai-result" id="ai-result">
+        <div class="ai-result-grid">
+          <div class="ai-preview">
+            <img id="ai-preview-img" src="" alt="Preview">
+          </div>
+          <div class="ai-analysis">
+            <div class="ai-result-label" data-i18n="ai_result_label">Classification Result</div>
+            <div class="ai-result-class" id="ai-result-class">—</div>
+
+            <div class="ai-confidence">
+              <div class="ai-result-label" data-i18n="ai_confidence_label">Confidence Score</div>
+              <div class="confidence-bar">
+                <div class="confidence-fill" id="confidence-fill" style="width:0%;"></div>
+              </div>
+              <div class="confidence-value" id="confidence-value">—</div>
+            </div>
+
+            <button class="btn btn-outline" id="btn-analyze-another" style="margin-top:24px;" data-i18n="analyze_another">
+              Analyze Another Image
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kept hidden so ai-analyzer.js does not break, but old results do not show -->
+      <div class="ai-history" style="display:none !important;">
+        <div class="history-list" id="history-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/translations.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/ai-analyzer.js"></script>
+</body>
+</html>

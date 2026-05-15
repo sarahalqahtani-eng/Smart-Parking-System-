@@ -24,16 +24,8 @@ CLASS_NAMES = ['Empty', 'Occupied']
 # -------------------------------------------------------------------------
 app = Flask(__name__)
 
-# Allow Vercel + local website to call Render backend
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "https://alyamamah-parking.vercel.app",
-            "http://localhost:5500",
-            "http://127.0.0.1:5500"
-        ]
-    }
-})
+# Allow all websites to call this API for demo
+CORS(app)
 
 print(f'Loading model from {MODEL_PATH} ...')
 model = tf.keras.models.load_model(MODEL_PATH)

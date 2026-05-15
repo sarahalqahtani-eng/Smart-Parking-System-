@@ -37,7 +37,7 @@ async function analyzeImage(file) {
   formData.append('image', file);
 
   try {
-    const resp = await fetch('https://smart-parking-system-309k.onrender.com/predict', {
+    const resp = await fetch('https://smart-parking-system-309k.onrender.com', {
   method: 'POST',
   body: formData,
 });

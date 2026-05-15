@@ -7,7 +7,7 @@ Loads the trained Keras model and serves a /predict endpoint.
 import io
 import os
 import numpy as np
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from PIL import Image
 import tensorflow as tf
@@ -25,7 +25,14 @@ CLASS_NAMES = ['Empty', 'Occupied']
 app = Flask(__name__)
 
 # Allow all websites to call this API for demo
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return response
 
 print(f'Loading model from {MODEL_PATH} ...')
 model = tf.keras.models.load_model(MODEL_PATH)
@@ -61,11 +68,17 @@ def health():
     return jsonify({'status': 'ok'})
 
 
-@app.route('/predict', methods=['POST', 'OPTIONS'])
-def predict():
-    if request.method == 'OPTIONS':
-        return jsonify({'status': 'ok'}), 200
+@app.route('/predict', methods=['OPTIONS'])
+def predict_options():
+    response = make_response('', 204)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    return response
 
+
+@app.route('/predict', methods=['POST'])
+def predict():
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded. Send as form-data field "image".'}), 400
 
